@@ -4,6 +4,7 @@ import { auth } from "@clerk/nextjs";
 import { LayoutDashboard } from "lucide-react";
 import { redirect } from "next/navigation";
 import React from "react";
+import TitleForm from "./_componets/title-form";
 
 const CourseIdPage = async ({
   params,
@@ -55,12 +56,9 @@ const CourseIdPage = async ({
         <div>
           <div className="flex items-center gap-x-2">
             <IconBadge icon={LayoutDashboard} />
-            <h2 className="text-xl">
-                Customize your course
-            </h2>
-
-            
+            <h2 className="text-xl">Customize your course</h2>
           </div>
+          <TitleForm initialData={course} courseId={course.id} />
         </div>
       </div>
     </div>
