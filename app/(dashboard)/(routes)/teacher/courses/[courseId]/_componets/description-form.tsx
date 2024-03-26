@@ -13,24 +13,25 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Pencil, X } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { Textarea } from "@/components/ui/textarea";
 
-interface TitleFormProps {
-  initialData: { title: string };
+interface DescriptionFormProps {
+  initialData: { description: string | null };
   courseId: string;
 }
 
 const FromSchema = z.object({
-  title: z.string().min(1, {
-    message: "Title is required",
+  description: z.string().min(1, {
+    message: "Description is required",
   }),
 });
 
-const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
+const DescriptionForm = ({ initialData, courseId }: DescriptionFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const toggleEdit = () => setIsEditing((current) => !current);
@@ -38,7 +39,9 @@ const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
 
   const form = useForm<z.infer<typeof FromSchema>>({
     resolver: zodResolver(FromSchema),
-    defaultValues: initialData,
+    defaultValues: {
+      description: initialData.description || "",
+    },
   });
 
   const { isSubmitting, isValid } = form.formState;
@@ -46,7 +49,7 @@ const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
   const onSubmit = async (values: z.infer<typeof FromSchema>) => {
     try {
       await axios.patch(`/api/courses/${courseId}`, values);
-      toast.success("Course title updated");
+      toast.success("Course description updated");
       toggleEdit();
       router.refresh();
     } catch (error) {
@@ -57,7 +60,7 @@ const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        Course title
+        Course description
         <Button variant="ghost" onClick={toggleEdit}>
           {isEditing ? (
             <>
@@ -67,7 +70,7 @@ const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
           ) : (
             <>
               <Pencil className="h4 w-4 mr-2" />
-              Edit title
+              Edit description
             </>
           )}
         </Button>
@@ -80,13 +83,13 @@ const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
           >
             <FormField
               control={form.control}
-              name="title"
+              name="description"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input
+                    <Textarea
                       disabled={isSubmitting}
-                      placeholder="e.g. 'Advanced web development'"
+                      placeholder="e.g. 'This course is all about ...'"
                       {...field}
                     />
                   </FormControl>
@@ -102,10 +105,17 @@ const TitleForm = ({ initialData, courseId }: TitleFormProps) => {
           </form>
         </Form>
       ) : (
-        <p className="text-sm mt-2">{initialData.title}</p>
+        <p
+          className={cn(
+            "text-sm mt-2",
+            !initialData.description && "text-slate-500 italic"
+          )}
+        >
+          {initialData.description || "no description"}
+        </p>
       )}
     </div>
   );
 };
 
-export default TitleForm;
+export default DescriptionForm;

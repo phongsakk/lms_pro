@@ -5,6 +5,7 @@ import { LayoutDashboard } from "lucide-react";
 import { redirect } from "next/navigation";
 import React from "react";
 import TitleForm from "./_componets/title-form";
+import DescriptionForm from "./_componets/description-form";
 
 const CourseIdPage = async ({
   params,
@@ -59,6 +60,7 @@ const CourseIdPage = async ({
             <h2 className="text-xl">Customize your course</h2>
           </div>
           <TitleForm initialData={course} courseId={course.id} />
+          <DescriptionForm initialData={course} courseId={course.id} />
         </div>
       </div>
     </div>
