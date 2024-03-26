@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "db:generate": "prisma generate",
-    "db:migrate": "prisma db push"
+    "db:migrate": "prisma db push",
+    "db:studio": "prisma studio"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.29.7",
